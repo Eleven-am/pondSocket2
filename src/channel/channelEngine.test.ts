@@ -233,6 +233,44 @@ describe('ChannelEngine', () => {
         });
     });
 
+    it('should throw error if user is not in channel and isPond is false', () => {
+        const parentEngine = createParentEngine();
+        const channelEngine = new ChannelEngine('testChannel', parentEngine);
+
+        // add a user to the channel
+        channelEngine.addUser('test', {test: 1}, jest.fn());
+
+        // track the added user's presence
+        channelEngine.trackPresence('test', {test: 2});
+
+        // we do this because we want to initialize the presence engine
+        // the engine is not initialized by default when a xhannel is created
+
+        expect(() => {
+            // now we try to untrack the presence of a user that is not in the channel
+            channelEngine.untrackPresence('test1', false);
+        }).toThrow('PresenceEngine: Presence with key test1 does not exist');
+    });
+
+    it('should not throw error if user is not in channel and isPond is true', () => {
+        const parentEngine = createParentEngine();
+        const channelEngine = new ChannelEngine('testChannel', parentEngine);
+
+        // add a user to the channel
+        channelEngine.addUser('test', {test: 1}, jest.fn());
+
+        // track the added user's presence
+        channelEngine.trackPresence('test', {test: 2});
+
+        // we do this because we want to initialize the presence engine
+        // the engine is not initialized by default when a xhannel is created
+
+        expect(() => {
+            // now we try to untrack the presence of a user that is not in the channel
+            channelEngine.untrackPresence('test', true);
+        }).not.toThrow();
+    });
+
     it('should be able to kick a user from the channel', () => {
         const onMessage = jest.fn();
         const parentEngine = createParentEngine();

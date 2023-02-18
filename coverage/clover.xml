@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1676194097604" clover="3.2.0">
-  <project timestamp="1676194097604" name="All files">
-    <metrics statements="481" coveredstatements="429" conditionals="155" coveredconditionals="133" methods="159" coveredmethods="136" elements="795" coveredelements="698" complexity="0" loc="481" ncloc="481" packages="7" files="15" classes="15"/>
+<coverage generated="1676723524203" clover="3.2.0">
+  <project timestamp="1676723524203" name="All files">
+    <metrics statements="481" coveredstatements="433" conditionals="155" coveredconditionals="136" methods="159" coveredmethods="136" elements="795" coveredelements="705" complexity="0" loc="481" ncloc="481" packages="7" files="15" classes="15"/>
     <package name="abstracts">
       <metrics statements="26" coveredstatements="26" conditionals="18" coveredconditionals="18" methods="10" coveredmethods="10"/>
-      <file name="abstractRequest.ts" path="/Users/royossai/WebstormProjects/pond2/src/abstracts/abstractRequest.ts">
+      <file name="abstractRequest.ts" path="/Users/royossai/WebstormProjects/pondSocket2/src/abstracts/abstractRequest.ts">
         <metrics statements="12" coveredstatements="12" conditionals="12" coveredconditionals="12" methods="6" coveredmethods="6"/>
         <line num="3" count="5" type="stmt"/>
         <line num="11" count="5" type="stmt"/>
@@ -19,11 +19,11 @@
         <line num="48" count="4" type="stmt"/>
         <line num="49" count="4" type="stmt"/>
       </file>
-      <file name="abstractResponse.ts" path="/Users/royossai/WebstormProjects/pond2/src/abstracts/abstractResponse.ts">
+      <file name="abstractResponse.ts" path="/Users/royossai/WebstormProjects/pondSocket2/src/abstracts/abstractResponse.ts">
         <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="5" count="5" type="stmt"/>
       </file>
-      <file name="middleware.ts" path="/Users/royossai/WebstormProjects/pond2/src/abstracts/middleware.ts">
+      <file name="middleware.ts" path="/Users/royossai/WebstormProjects/pondSocket2/src/abstracts/middleware.ts">
         <metrics statements="13" coveredstatements="13" conditionals="6" coveredconditionals="6" methods="4" coveredmethods="4"/>
         <line num="9" count="2" type="stmt"/>
         <line num="10" count="14" type="stmt"/>
@@ -41,23 +41,23 @@
       </file>
     </package>
     <package name="channel">
-      <metrics statements="140" coveredstatements="136" conditionals="59" coveredconditionals="55" methods="40" coveredmethods="40"/>
-      <file name="channelEngine.ts" path="/Users/royossai/WebstormProjects/pond2/src/channel/channelEngine.ts">
-        <metrics statements="88" coveredstatements="86" conditionals="45" coveredconditionals="42" methods="23" coveredmethods="23"/>
+      <metrics statements="140" coveredstatements="140" conditionals="59" coveredconditionals="58" methods="40" coveredmethods="40"/>
+      <file name="channelEngine.ts" path="/Users/royossai/WebstormProjects/pondSocket2/src/channel/channelEngine.ts">
+        <metrics statements="88" coveredstatements="88" conditionals="45" coveredconditionals="44" methods="23" coveredmethods="23"/>
         <line num="1" count="4" type="stmt"/>
         <line num="2" count="4" type="stmt"/>
         <line num="3" count="4" type="stmt"/>
         <line num="4" count="4" type="stmt"/>
         <line num="40" count="4" type="stmt"/>
-        <line num="48" count="41" type="stmt"/>
-        <line num="49" count="41" type="stmt"/>
-        <line num="50" count="41" type="stmt"/>
-        <line num="51" count="41" type="stmt"/>
-        <line num="61" count="44" type="stmt"/>
-        <line num="62" count="44" type="cond" truecount="1" falsecount="0"/>
+        <line num="48" count="45" type="stmt"/>
+        <line num="49" count="45" type="stmt"/>
+        <line num="50" count="45" type="stmt"/>
+        <line num="51" count="45" type="stmt"/>
+        <line num="61" count="48" type="stmt"/>
+        <line num="62" count="48" type="cond" truecount="1" falsecount="0"/>
         <line num="63" count="1" type="stmt"/>
-        <line num="65" count="43" type="stmt"/>
-        <line num="66" count="43" type="stmt"/>
+        <line num="65" count="47" type="stmt"/>
+        <line num="66" count="47" type="stmt"/>
         <line num="75" count="9" type="stmt"/>
         <line num="76" count="9" type="cond" truecount="2" falsecount="0"/>
         <line num="77" count="8" type="stmt"/>
@@ -73,21 +73,21 @@
         <line num="108" count="2" type="stmt"/>
         <line num="112" count="2" type="stmt"/>
         <line num="113" count="2" type="stmt"/>
-        <line num="122" count="12" type="cond" truecount="2" falsecount="0"/>
-        <line num="123" count="12" type="cond" truecount="1" falsecount="0"/>
+        <line num="122" count="15" type="cond" truecount="2" falsecount="0"/>
+        <line num="123" count="15" type="cond" truecount="1" falsecount="0"/>
         <line num="124" count="1" type="stmt"/>
-        <line num="126" count="11" type="cond" truecount="1" falsecount="0"/>
+        <line num="126" count="14" type="cond" truecount="1" falsecount="0"/>
         <line num="127" count="1" type="stmt"/>
-        <line num="129" count="10" type="stmt"/>
-        <line num="130" count="15" type="stmt"/>
+        <line num="129" count="13" type="stmt"/>
+        <line num="130" count="18" type="stmt"/>
         <line num="140" count="4" type="cond" truecount="1" falsecount="0"/>
         <line num="141" count="1" type="stmt"/>
         <line num="143" count="3" type="cond" truecount="2" falsecount="0"/>
         <line num="144" count="2" type="stmt"/>
         <line num="147" count="1" type="stmt"/>
-        <line num="156" count="2" type="stmt"/>
-        <line num="157" count="2" type="cond" truecount="2" falsecount="0"/>
-        <line num="158" count="1" type="stmt"/>
+        <line num="156" count="3" type="stmt"/>
+        <line num="157" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="158" count="2" type="stmt"/>
         <line num="160" count="1" type="stmt"/>
         <line num="168" count="14" type="cond" truecount="2" falsecount="0"/>
         <line num="169" count="14" type="cond" truecount="2" falsecount="0"/>
@@ -100,8 +100,8 @@
         <line num="194" count="4" type="cond" truecount="2" falsecount="0"/>
         <line num="195" count="3" type="stmt"/>
         <line num="197" count="1" type="stmt"/>
-        <line num="209" count="20" type="cond" truecount="4" falsecount="0"/>
-        <line num="210" count="9" type="stmt"/>
+        <line num="209" count="21" type="cond" truecount="4" falsecount="0"/>
+        <line num="210" count="10" type="stmt"/>
         <line num="212" count="11" type="cond" truecount="2" falsecount="0"/>
         <line num="213" count="3" type="stmt"/>
         <line num="216" count="8" type="stmt"/>
@@ -111,29 +111,29 @@
         <line num="226" count="5" type="stmt"/>
         <line num="229" count="8" type="stmt"/>
         <line num="230" count="1" type="stmt"/>
-        <line num="244" count="9" type="cond" truecount="1" falsecount="0"/>
-        <line num="245" count="1" type="cond" truecount="3" falsecount="1"/>
-        <line num="246" count="1" type="stmt"/>
-        <line num="247" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="248" count="0" type="stmt"/>
-        <line num="258" count="43" type="stmt"/>
-        <line num="259" count="46" type="cond" truecount="1" falsecount="0"/>
-        <line num="260" count="33" type="stmt"/>
-        <line num="277" count="36" type="stmt"/>
-        <line num="280" count="36" type="cond" truecount="3" falsecount="0"/>
+        <line num="244" count="13" type="cond" truecount="1" falsecount="0"/>
+        <line num="245" count="5" type="cond" truecount="4" falsecount="0"/>
+        <line num="246" count="2" type="stmt"/>
+        <line num="247" count="3" type="cond" truecount="1" falsecount="0"/>
+        <line num="248" count="3" type="stmt"/>
+        <line num="258" count="47" type="stmt"/>
+        <line num="259" count="50" type="cond" truecount="1" falsecount="0"/>
+        <line num="260" count="37" type="stmt"/>
+        <line num="277" count="40" type="stmt"/>
+        <line num="280" count="40" type="cond" truecount="3" falsecount="0"/>
         <line num="282" count="7" type="stmt"/>
         <line num="283" count="7" type="stmt"/>
         <line num="285" count="4" type="cond" truecount="1" falsecount="0"/>
         <line num="286" count="1" type="stmt"/>
         <line num="288" count="5" type="stmt"/>
         <line num="289" count="3" type="stmt"/>
-        <line num="291" count="28" type="stmt"/>
-        <line num="292" count="25" type="cond" truecount="1" falsecount="0"/>
+        <line num="291" count="32" type="stmt"/>
+        <line num="292" count="29" type="cond" truecount="1" falsecount="0"/>
         <line num="293" count="1" type="stmt"/>
-        <line num="295" count="24" type="stmt"/>
-        <line num="298" count="34" type="stmt"/>
+        <line num="295" count="28" type="stmt"/>
+        <line num="298" count="38" type="stmt"/>
       </file>
-      <file name="channelRequest.ts" path="/Users/royossai/WebstormProjects/pond2/src/channel/channelRequest.ts">
+      <file name="channelRequest.ts" path="/Users/royossai/WebstormProjects/pondSocket2/src/channel/channelRequest.ts">
         <metrics statements="9" coveredstatements="9" conditionals="1" coveredconditionals="1" methods="3" coveredmethods="3"/>
         <line num="3" count="4" type="stmt"/>
         <line num="5" count="4" type="stmt"/>
@@ -145,20 +145,20 @@
         <line num="21" count="1" type="stmt"/>
         <line num="23" count="1" type="stmt"/>
       </file>
-      <file name="channelResponse.ts" path="/Users/royossai/WebstormProjects/pond2/src/channel/channelResponse.ts">
-        <metrics statements="43" coveredstatements="41" conditionals="13" coveredconditionals="12" methods="14" coveredmethods="14"/>
+      <file name="channelResponse.ts" path="/Users/royossai/WebstormProjects/pondSocket2/src/channel/channelResponse.ts">
+        <metrics statements="43" coveredstatements="43" conditionals="13" coveredconditionals="13" methods="14" coveredmethods="14"/>
         <line num="1" count="4" type="stmt"/>
         <line num="5" count="4" type="stmt"/>
-        <line num="9" count="21" type="stmt"/>
-        <line num="12" count="21" type="stmt"/>
-        <line num="13" count="21" type="stmt"/>
-        <line num="14" count="21" type="stmt"/>
-        <line num="15" count="21" type="stmt"/>
+        <line num="9" count="23" type="stmt"/>
+        <line num="12" count="23" type="stmt"/>
+        <line num="13" count="23" type="stmt"/>
+        <line num="14" count="23" type="stmt"/>
+        <line num="15" count="23" type="stmt"/>
         <line num="22" count="9" type="stmt"/>
-        <line num="30" count="7" type="stmt"/>
-        <line num="31" count="7" type="stmt"/>
-        <line num="32" count="6" type="stmt"/>
-        <line num="33" count="6" type="stmt"/>
+        <line num="30" count="8" type="stmt"/>
+        <line num="31" count="8" type="stmt"/>
+        <line num="32" count="7" type="stmt"/>
+        <line num="33" count="7" type="stmt"/>
         <line num="43" count="3" type="stmt"/>
         <line num="44" count="3" type="cond" truecount="2" falsecount="0"/>
         <line num="45" count="3" type="cond" truecount="2" falsecount="0"/>
@@ -173,28 +173,28 @@
         <line num="79" count="1" type="stmt"/>
         <line num="89" count="1" type="stmt"/>
         <line num="90" count="1" type="stmt"/>
-        <line num="99" count="2" type="cond" truecount="2" falsecount="0"/>
-        <line num="100" count="2" type="stmt"/>
+        <line num="99" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="100" count="3" type="stmt"/>
         <line num="109" count="1" type="cond" truecount="2" falsecount="0"/>
         <line num="110" count="1" type="stmt"/>
-        <line num="118" count="1" type="cond" truecount="2" falsecount="0"/>
-        <line num="119" count="1" type="stmt"/>
-        <line num="120" count="1" type="stmt"/>
-        <line num="122" count="0" type="stmt"/>
-        <line num="125" count="1" type="stmt"/>
+        <line num="118" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="119" count="3" type="stmt"/>
+        <line num="120" count="3" type="stmt"/>
+        <line num="122" count="1" type="stmt"/>
+        <line num="125" count="3" type="stmt"/>
         <line num="134" count="1" type="cond" truecount="2" falsecount="0"/>
         <line num="135" count="1" type="stmt"/>
         <line num="136" count="1" type="stmt"/>
         <line num="144" count="1" type="stmt"/>
         <line num="145" count="1" type="stmt"/>
         <line num="146" count="1" type="stmt"/>
-        <line num="155" count="10" type="cond" truecount="0" falsecount="1"/>
-        <line num="156" count="0" type="stmt"/>
+        <line num="155" count="11" type="cond" truecount="1" falsecount="0"/>
+        <line num="156" count="1" type="stmt"/>
       </file>
     </package>
     <package name="endpoint">
       <metrics statements="122" coveredstatements="104" conditionals="38" coveredconditionals="28" methods="35" coveredmethods="29"/>
-      <file name="endpointEngine.ts" path="/Users/royossai/WebstormProjects/pond2/src/endpoint/endpointEngine.ts">
+      <file name="endpointEngine.ts" path="/Users/royossai/WebstormProjects/pondSocket2/src/endpoint/endpointEngine.ts">
         <metrics statements="105" coveredstatements="90" conditionals="27" coveredconditionals="20" methods="31" coveredmethods="25"/>
         <line num="2" count="2" type="stmt"/>
         <line num="7" count="2" type="stmt"/>
@@ -302,7 +302,7 @@
         <line num="342" count="378" type="stmt"/>
         <line num="345" count="18" type="stmt"/>
       </file>
-      <file name="endpointResponse.ts" path="/Users/royossai/WebstormProjects/pond2/src/endpoint/endpointResponse.ts">
+      <file name="endpointResponse.ts" path="/Users/royossai/WebstormProjects/pondSocket2/src/endpoint/endpointResponse.ts">
         <metrics statements="17" coveredstatements="14" conditionals="11" coveredconditionals="8" methods="4" coveredmethods="4"/>
         <line num="1" count="2" type="stmt"/>
         <line num="11" count="2" type="stmt"/>
@@ -325,7 +325,7 @@
     </package>
     <package name="pondChannel">
       <metrics statements="78" coveredstatements="57" conditionals="12" coveredconditionals="6" methods="31" coveredmethods="22"/>
-      <file name="pondChannel.ts" path="/Users/royossai/WebstormProjects/pond2/src/pondChannel/pondChannel.ts">
+      <file name="pondChannel.ts" path="/Users/royossai/WebstormProjects/pondSocket2/src/pondChannel/pondChannel.ts">
         <metrics statements="44" coveredstatements="38" conditionals="8" coveredconditionals="6" methods="17" coveredmethods="15"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
@@ -372,7 +372,7 @@
         <line num="190" count="3" type="stmt"/>
         <line num="198" count="0" type="stmt"/>
       </file>
-      <file name="pondChannelRequest.ts" path="/Users/royossai/WebstormProjects/pond2/src/pondChannel/pondChannelRequest.ts">
+      <file name="pondChannelRequest.ts" path="/Users/royossai/WebstormProjects/pondSocket2/src/pondChannel/pondChannelRequest.ts">
         <metrics statements="7" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="2"/>
         <line num="1" count="1" type="stmt"/>
         <line num="7" count="1" type="stmt"/>
@@ -382,7 +382,7 @@
         <line num="20" count="0" type="stmt"/>
         <line num="28" count="3" type="stmt"/>
       </file>
-      <file name="pondChannelResponse.ts" path="/Users/royossai/WebstormProjects/pond2/src/pondChannel/pondChannelResponse.ts">
+      <file name="pondChannelResponse.ts" path="/Users/royossai/WebstormProjects/pondSocket2/src/pondChannel/pondChannelResponse.ts">
         <metrics statements="27" coveredstatements="14" conditionals="4" coveredconditionals="0" methods="10" coveredmethods="5"/>
         <line num="1" count="1" type="stmt"/>
         <line num="6" count="1" type="stmt"/>
@@ -415,40 +415,40 @@
     </package>
     <package name="presence">
       <metrics statements="27" coveredstatements="27" conditionals="7" coveredconditionals="7" methods="9" coveredmethods="9"/>
-      <file name="presenceEngine.ts" path="/Users/royossai/WebstormProjects/pond2/src/presence/presenceEngine.ts">
+      <file name="presenceEngine.ts" path="/Users/royossai/WebstormProjects/pondSocket2/src/presence/presenceEngine.ts">
         <metrics statements="27" coveredstatements="27" conditionals="7" coveredconditionals="7" methods="9" coveredmethods="9"/>
         <line num="1" count="5" type="stmt"/>
         <line num="16" count="5" type="stmt"/>
-        <line num="21" count="17" type="stmt"/>
-        <line num="22" count="17" type="stmt"/>
+        <line num="21" count="20" type="stmt"/>
+        <line num="22" count="20" type="stmt"/>
         <line num="29" count="4" type="stmt"/>
         <line num="31" count="6" type="stmt"/>
         <line num="32" count="6" type="stmt"/>
-        <line num="41" count="15" type="stmt"/>
-        <line num="49" count="4" type="stmt"/>
-        <line num="50" count="4" type="cond" truecount="2" falsecount="0"/>
-        <line num="51" count="3" type="stmt"/>
-        <line num="52" count="3" type="stmt"/>
-        <line num="53" count="3" type="cond" truecount="1" falsecount="0"/>
+        <line num="41" count="19" type="stmt"/>
+        <line num="49" count="8" type="stmt"/>
+        <line num="50" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="51" count="5" type="stmt"/>
+        <line num="52" count="5" type="stmt"/>
+        <line num="53" count="5" type="cond" truecount="1" falsecount="0"/>
         <line num="54" count="2" type="stmt"/>
-        <line num="60" count="1" type="stmt"/>
+        <line num="60" count="3" type="stmt"/>
         <line num="69" count="4" type="stmt"/>
         <line num="70" count="4" type="cond" truecount="2" falsecount="0"/>
         <line num="71" count="3" type="stmt"/>
         <line num="72" count="3" type="stmt"/>
         <line num="78" count="1" type="stmt"/>
-        <line num="88" count="18" type="stmt"/>
-        <line num="89" count="17" type="stmt"/>
-        <line num="99" count="18" type="cond" truecount="2" falsecount="0"/>
-        <line num="100" count="17" type="stmt"/>
-        <line num="101" count="17" type="stmt"/>
+        <line num="88" count="21" type="stmt"/>
+        <line num="89" count="20" type="stmt"/>
+        <line num="99" count="21" type="cond" truecount="2" falsecount="0"/>
+        <line num="100" count="20" type="stmt"/>
+        <line num="101" count="20" type="stmt"/>
         <line num="107" count="1" type="stmt"/>
-        <line num="117" count="17" type="stmt"/>
+        <line num="117" count="20" type="stmt"/>
       </file>
     </package>
     <package name="server">
       <metrics statements="44" coveredstatements="35" conditionals="10" coveredconditionals="8" methods="18" coveredmethods="10"/>
-      <file name="pondSocket.ts" path="/Users/royossai/WebstormProjects/pond2/src/server/pondSocket.ts">
+      <file name="pondSocket.ts" path="/Users/royossai/WebstormProjects/pondSocket2/src/server/pondSocket.ts">
         <metrics statements="44" coveredstatements="35" conditionals="10" coveredconditionals="8" methods="18" coveredmethods="10"/>
         <line num="1" count="2" type="stmt"/>
         <line num="2" count="2" type="stmt"/>
@@ -498,7 +498,7 @@
     </package>
     <package name="utils">
       <metrics statements="44" coveredstatements="44" conditionals="11" coveredconditionals="11" methods="16" coveredmethods="16"/>
-      <file name="matchPattern.ts" path="/Users/royossai/WebstormProjects/pond2/src/utils/matchPattern.ts">
+      <file name="matchPattern.ts" path="/Users/royossai/WebstormProjects/pondSocket2/src/utils/matchPattern.ts">
         <metrics statements="32" coveredstatements="32" conditionals="10" coveredconditionals="10" methods="8" coveredmethods="8"/>
         <line num="9" count="7" type="stmt"/>
         <line num="17" count="32" type="stmt"/>
@@ -533,20 +533,20 @@
         <line num="107" count="3" type="cond" truecount="1" falsecount="0"/>
         <line num="109" count="2" type="stmt"/>
       </file>
-      <file name="subjectUtils.ts" path="/Users/royossai/WebstormProjects/pond2/src/utils/subjectUtils.ts">
+      <file name="subjectUtils.ts" path="/Users/royossai/WebstormProjects/pondSocket2/src/utils/subjectUtils.ts">
         <metrics statements="12" coveredstatements="12" conditionals="1" coveredconditionals="1" methods="8" coveredmethods="8"/>
         <line num="5" count="5" type="stmt"/>
-        <line num="9" count="58" type="stmt"/>
-        <line num="13" count="60" type="stmt"/>
-        <line num="17" count="56" type="stmt"/>
-        <line num="21" count="12" type="stmt"/>
+        <line num="9" count="65" type="stmt"/>
+        <line num="13" count="67" type="stmt"/>
+        <line num="17" count="63" type="stmt"/>
+        <line num="21" count="14" type="stmt"/>
         <line num="27" count="5" type="stmt"/>
-        <line num="31" count="17" type="stmt"/>
-        <line num="35" count="22" type="stmt"/>
-        <line num="36" count="22" type="stmt"/>
-        <line num="40" count="17" type="cond" truecount="1" falsecount="0"/>
-        <line num="41" count="17" type="stmt"/>
-        <line num="43" count="17" type="stmt"/>
+        <line num="31" count="20" type="stmt"/>
+        <line num="35" count="25" type="stmt"/>
+        <line num="36" count="25" type="stmt"/>
+        <line num="40" count="20" type="cond" truecount="1" falsecount="0"/>
+        <line num="41" count="20" type="stmt"/>
+        <line num="43" count="20" type="stmt"/>
       </file>
     </package>
   </project>

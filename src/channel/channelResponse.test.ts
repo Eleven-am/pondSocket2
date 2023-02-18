@@ -103,12 +103,32 @@ describe('ChannelResponse', () => {
         expect(channelEngine.untrackPresence).toHaveBeenCalledWith('sender');
     });
 
+    it('should broadcast an error if untrackPresence is called twice', () => {
+        const {response, channelEngine} = createChannelResponse();
+        jest.spyOn(channelEngine, 'broadcast');
+        // because by default the user is not tracked and the presence enghine only exists after a first trackPresence
+        // we need to call trackPresence first
+        response.trackPresence({status: 'online'});
+        response.untrackPresence();
+        response.untrackPresence();
+        expect(channelEngine.broadcast).toHaveBeenCalledWith(['sender'], 'error_channel', {
+            message: 'PresenceEngine: Presence with key sender does not exist', code: 500
+        });
+    });
+
     it('should updatePresence', () => {
         const {response, channelEngine} = createChannelResponse();
         jest.spyOn(channelEngine, 'updatePresence');
         response.trackPresence({status: 'online'})
         response.updatePresence({status: 'updated'});
         expect(channelEngine.updatePresence).toHaveBeenCalledWith('sender', {status: 'updated'});
+    });
+
+    it('should update a users assign data', () => {
+        const {response, channelEngine} = createChannelResponse();
+        jest.spyOn(channelEngine, 'updateAssigns');
+        response.accept({assign: 'updated'});
+        expect(channelEngine.updateAssigns).toHaveBeenCalledWith('sender', {assign: 'updated'});
     });
 
     it('should evict a user', () => {
