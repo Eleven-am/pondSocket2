@@ -57,9 +57,9 @@ export class PondChannelResponse extends PondResponse {
      * @param assigns - the data to assign to the client
      */
     public send(event: string, payload: PondMessage, assigns?: PondAssigns) {
-        this._hasExecuted = true;
+        this.accept(assigns);
         this._engine.broadcast([this._user.clientId], event, payload);
-        return this.accept(assigns);
+        return this;
     }
 
     /**
