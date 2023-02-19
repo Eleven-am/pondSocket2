@@ -56,14 +56,14 @@ export class PondSocket {
      * })
      */
     public createEndpoint(path: PondPath, handler: EndpointHandler) {
-        const endpoint = new EndpointEngine(this._socketServer, handler);
+        const endpoint = new EndpointEngine(this._socketServer);
         this._middleware.push((req, socket, head, next) => {
             const address = req.url || "";
             const dataEndpoint = this._matcher.parseEvent(path, address);
             if (!dataEndpoint)
                 return next();
 
-            endpoint._authoriseConnection(req, socket, head, dataEndpoint);
+            endpoint._authoriseConnection(req, socket, head, dataEndpoint, handler);
         });
 
         return endpoint;

@@ -44,14 +44,12 @@ export class EndpointEngine {
     private readonly _channels: PondChannelData[];
     private readonly _sockets: Set<SocketCache>;
     private readonly _matcher: MatchPattern;
-    private readonly _handler: EndpointHandler;
 
-    constructor(server: WebSocketServer, handler: EndpointHandler) {
+    constructor(server: WebSocketServer) {
         this._server = server;
         this._channels = [];
         this._sockets = new Set();
         this._matcher = new MatchPattern();
-        this._handler = handler;
     }
 
     /**
@@ -102,9 +100,8 @@ export class EndpointEngine {
 
         this.getClients()
             .forEach(({clientId, socket}) => {
-                if (clients.includes(clientId))
-                    socket.close();
-        });
+                if (clients.includes(clientId)) socket.close();
+            });
     }
 
     /**
@@ -113,12 +110,12 @@ export class EndpointEngine {
      * @param socket - Incoming socket
      * @param head - Incoming head
      * @param data - Incoming the data resolved from the handler
+     * @param handler - The handler to use to authenticate the client
      */
-    public _authoriseConnection(request: IncomingMessage, socket: internal.Duplex, head: Buffer, data: Resolver) {
+    public _authoriseConnection(request: IncomingMessage, socket: internal.Duplex, head: Buffer, data: Resolver, handler: EndpointHandler) {
         const clientId = this._generateClientId();
         const req: IncomingConnection = {
-            headers: request.headers,
-            ...data, id: clientId
+            headers: request.headers, ...data, id: clientId
         };
 
         const resolver: PondConnectionResponseHandler = (assigns, data) => {
@@ -130,9 +127,7 @@ export class EndpointEngine {
             this._server.handleUpgrade(request, socket, head, (ws) => {
                 this._server.emit("connection", ws);
                 const socketCache: SocketCache = {
-                    socket: ws,
-                    assigns: assigns,
-                    clientId: clientId
+                    socket: ws, assigns: assigns, clientId: clientId
                 };
 
                 this._sockets.add(socketCache);
@@ -140,9 +135,7 @@ export class EndpointEngine {
 
                 if (data.message) {
                     const newMessage: ChannelEvent = {
-                        event: data.message.event,
-                        channelName: "SERVER",
-                        payload: data.message.payload
+                        event: data.message.event, channelName: "SERVER", payload: data.message.payload
                     };
 
                     this._sendMessage(ws, newMessage);
@@ -151,7 +144,7 @@ export class EndpointEngine {
         }
 
         const res = new EndpointResponse(resolver);
-        this._handler(req, res);
+        handler(req, res);
     }
 
     /**
@@ -197,9 +190,7 @@ export class EndpointEngine {
             const match = this._matcher.parseEvent(path, channel);
             if (match) {
                 const request: RequestCache = {
-                    ...match, ...socket,
-                    joinParams: joinParams,
-                    channelName: channel
+                    ...match, ...socket, joinParams: joinParams, channelName: channel
                 };
 
                 return manager.addUser(request);
@@ -218,8 +209,7 @@ export class EndpointEngine {
     private _execute<A>(channel: string, handler: ((manager: ChannelEngine) => A)): A {
         for (const {manager} of this._channels) {
             const isPresent = manager.listChannels().includes(channel);
-            if (isPresent)
-                return manager.execute(channel, handler);
+            if (isPresent) return manager.execute(channel, handler);
         }
 
         throw new Error(`GatewayEngine: Channel ${channel} does not exist`);
@@ -276,34 +266,27 @@ export class EndpointEngine {
      */
     private _readMessage(cache: SocketCache, message: string) {
         const errorMessage: ChannelEvent = {
-            event: "error",
-            channelName: 'ENDPOINT',
-            payload: {}
+            event: "error", channelName: 'ENDPOINT', payload: {}
         };
 
         try {
             const data = JSON.parse(message) as ClientMessage;
 
-            if (!data.action)
-                errorMessage.payload = {
-                    message: "No action provided"
-                };
+            if (!data.action) errorMessage.payload = {
+                message: "No action provided"
+            };
 
-            else if (!data.channelName)
-                errorMessage.payload = {
-                    message: "No channel name provided"
-                };
+            else if (!data.channelName) errorMessage.payload = {
+                message: "No channel name provided"
+            };
 
-            else if (!data.payload)
-                errorMessage.payload = {
-                    message: "No payload provided"
-                };
+            else if (!data.payload) errorMessage.payload = {
+                message: "No payload provided"
+            };
 
-            else
-                this._handleMessage(cache, data);
+            else this._handleMessage(cache, data);
 
-            if (!this._isObjectEmpty(errorMessage.payload))
-                this._sendMessage(cache.socket, errorMessage);
+            if (!this._isObjectEmpty(errorMessage.payload)) this._sendMessage(cache.socket, errorMessage);
 
         } catch (e) {
             if (e instanceof SyntaxError) {
