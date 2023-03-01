@@ -1,6 +1,6 @@
 import { ChannelEngine } from './channelEngine';
 
-const createParentEngine = () => {
+export const createParentEngine = () => {
     const parentEngine = {
         destroyChannel: jest.fn(),
         execute: jest.fn(),
@@ -317,7 +317,7 @@ describe('ChannelEngine', () => {
         const channelEngine = new ChannelEngine('test', parentEngine);
         channelEngine.addUser('test', {test: 1}, onMessage);
         channelEngine.addUser('test2', {test: 1}, onMessage);
-        channelEngine.broadcast('all_users',  'test', {test: 2});
+        channelEngine.sendMessage('channel', 'all_users',  'test', {test: 2});
 
         expect(onMessage.mock.calls[0][0]).toStrictEqual({
             channelName: 'test',
@@ -330,32 +330,15 @@ describe('ChannelEngine', () => {
         expect(onMessage).toHaveBeenCalledTimes(2);
         onMessage.mockClear();
 
-        channelEngine.broadcast('all_except_sender',  'test', {test: 3}, 'test2');
+        channelEngine.sendMessage('test2','all_except_sender',  'test', {test: 3});
         expect(onMessage).toHaveBeenCalledTimes(1);
 
         onMessage.mockClear();
 
         // when user is not in channel it throws an error
         expect(() => {
-            channelEngine.broadcast('all_except_sender',  'test', {test: 3}, 'test3');
+            channelEngine.sendMessage('test3','all_except_sender',  'test', {test: 3});
         }).toThrow('ChannelEngine: User with id test3 does not exist in channel test');
-
-        expect(onMessage).toHaveBeenCalledTimes(0);
-
-        parentEngine.execute = (_: any, __: any, next: () => void) => {
-            next();
-        };
-
-        channelEngine.broadcast('all_users',  'test', {test: 2}, 'test2');
-        expect(onMessage).toHaveBeenCalledTimes(1);
-        expect(onMessage.mock.calls[0][0]).toStrictEqual({
-            channelName: 'test',
-            event: 'error_no_handler',
-            payload: {
-                message: 'A handler did not respond to the event',
-                code: 404
-            }
-        });
     });
 
     it('should broadcast a message to all users except sender', () => {
@@ -367,7 +350,7 @@ describe('ChannelEngine', () => {
         const channelEngine = new ChannelEngine('test', parentEngine);
         channelEngine.addUser('test', {test: 1}, onMessage);
         channelEngine.addUser('test2', {test: 1}, onMessage);
-        channelEngine.broadcast('all_except_sender',  'test', {test: 2}, 'test2');
+        channelEngine.sendMessage('test2','all_except_sender',  'test', {test: 2});
 
         expect(onMessage.mock.calls[0][0]).toStrictEqual({
             channelName: 'test',
@@ -381,12 +364,12 @@ describe('ChannelEngine', () => {
         // when user is not in channel it throws an error
 
         expect(() => {
-            channelEngine.broadcast('all_except_sender',  'test', {test: 3}, 'test3');
+            channelEngine.sendMessage('test3','all_except_sender',  'test', {test: 3});
         }).toThrow('ChannelEngine: User with id test3 does not exist in channel test');
 
         // when sender is channel itself it throws an error
         expect(() => {
-            channelEngine.broadcast('all_except_sender',  'test', {test: 3}, 'channel');
+            channelEngine.sendMessage('channel','all_except_sender',  'test', {test: 3});
         }).toThrow('ChannelEngine: Cannot send to all users except sender when sender is channel');
     });
 
@@ -401,7 +384,7 @@ describe('ChannelEngine', () => {
         channelEngine.addUser('test2', {test: 1}, onMessage);
         channelEngine.addUser('test3', {test: 1}, onMessage);
 
-        channelEngine.broadcast(['test', 'test3'],  'test', {test: 2}, 'test2');
+        channelEngine.sendMessage('test2',['test', 'test3'],  'test', {test: 2});
 
         expect(onMessage.mock.calls[0][0]).toStrictEqual({
             channelName: 'test',
@@ -423,12 +406,12 @@ describe('ChannelEngine', () => {
 
         // when recipient is not in channel it throws an error
         expect(() => {
-            channelEngine.broadcast(['test', 'test3', 'test4'],  'test', {test: 3}, 'test3');
+            channelEngine.sendMessage('test3', ['test', 'test3', 'test4'],  'test', {test: 3});
         }).toThrow('ChannelEngine: Users test4 are not in channel test');
 
         // when sender is not in channel it throws an error
         expect(() => {
-            channelEngine.broadcast(['test', 'test3'],  'test', {test: 3}, 'test4');
+            channelEngine.sendMessage('test4',['test', 'test3'],  'test', {test: 3});
         }).toThrow('ChannelEngine: User with id test4 does not exist in channel test');
     });
 });

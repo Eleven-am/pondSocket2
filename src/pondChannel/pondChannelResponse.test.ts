@@ -1,16 +1,7 @@
-import {ChannelEngine} from "../channel/channelEngine";
 import {SocketCache} from "./pondChannel";
 import {PondChannelResponse} from "./pondChannelResponse";
+import {createChannelEngine} from "../channel/channelResponse.test";
 
-
-const createChannelEngine = () => {
-    const parentEngine = {
-        destroyChannel: jest.fn(),
-        execute: jest.fn(),
-    } as any;
-
-    return new ChannelEngine('test', parentEngine);
-}
 
 const createPondResponse = () => {
     const channelEngine = createChannelEngine();
@@ -94,31 +85,41 @@ describe('pondChannelResponse', () => {
         }));
     });
 
-    // auxillary functions
+    // auxiliary functions
     it('should send messages to different users', () => {
         const {response, channelEngine} = createPondResponse();
         // spy on the channelEngine to see if any messages were published
-        const broadcast = jest.spyOn(channelEngine, 'broadcast');
+        const broadcast = jest.spyOn(channelEngine, 'sendMessage');
 
         // add a second user to the channel
         channelEngine.addUser('user2', {assign: 'assign'}, () => {});
 
         // send a message to a single user
-        response.sendToUsers('hello_everyone', {message: 'hello'}, ['user2']);
-        expect(broadcast).toHaveBeenCalledWith(['user2'], 'hello_everyone', {message: 'hello'}, 'sender', true);
+        expect(() =>
+            response.sendToUsers('hello_everyone', {message: 'hello'}, ['user2'])
+        ).toThrow(); // this is because the sender does not exist in the channel yet
+
+        // clear the spy
+        broadcast.mockClear();
+
+        // add the sender to the channel by using the response.accept() method
+        response.accept().sendToUsers('hello_everyone', {message: 'hello'}, ['user2']);
+
+        // check if the message was sent
+        expect(broadcast).toHaveBeenCalledWith('sender', ['user2'], 'hello_everyone', {message: 'hello'});
 
         // clear the spy
         broadcast.mockClear();
 
         // send a message to all users
         response.broadcast('hello_everyone', {message: 'hello'});
-        expect(broadcast).toHaveBeenCalledWith('all_users', 'hello_everyone', {message: 'hello'});
+        expect(broadcast).toHaveBeenCalledWith('sender', 'all_users', 'hello_everyone', {message: 'hello'});
 
         // clear the spy
         broadcast.mockClear();
 
         // send a message to all users except the sender
         response.broadcastFromUser('hello_everyone', {message: 'hello'});
-        expect(broadcast).toHaveBeenCalledWith('all_except_sender', 'hello_everyone', {message: 'hello'}, 'sender', true);
+        expect(broadcast).toHaveBeenCalledWith('sender', 'all_except_sender', 'hello_everyone', {message: 'hello'});
     });
 })

@@ -3,16 +3,14 @@ import {ChannelEngine, InternalChannelEvent, PondAssigns} from "./channelEngine"
 import {PondPresence} from "../presence/presenceEngine";
 
 export class ChannelResponse extends PondResponse {
-    private readonly _resolve: (value: boolean) => void;
     private readonly _event: InternalChannelEvent;
     private readonly _engine: ChannelEngine;
     private _hasExecuted: boolean = false;
 
-    constructor(event: InternalChannelEvent, engine: ChannelEngine, resolve: (value: boolean) => void) {
+    constructor(event: InternalChannelEvent, engine: ChannelEngine) {
         super();
         this._event = event;
         this._engine = engine;
-        this._resolve = resolve;
     }
 
     /**
@@ -28,7 +26,6 @@ export class ChannelResponse extends PondResponse {
      */
     public accept(assigns?: PondAssigns): ChannelResponse {
         this._manageAssigns(assigns);
-        this._resolve(true);
         this._hasExecuted = true;
         return this;
     }
@@ -42,8 +39,7 @@ export class ChannelResponse extends PondResponse {
     public reject(message?: string, errorCode?: number, assigns?: PondAssigns): ChannelResponse {
         this._manageAssigns(assigns);
         const text = message || 'Unauthorized request';
-        this._engine.broadcast([this._event.sender], 'error_channel', {message: text, code: errorCode || 403});
-        this._resolve(false);
+        this._engine.sendMessage('channel', [this._event.sender], 'error_channel', {message: text, code: errorCode || 403});
         this._hasExecuted = true;
         return this;
     }
@@ -55,7 +51,7 @@ export class ChannelResponse extends PondResponse {
      * @param assigns - the data to assign to the client
      */
     public send(event: string, payload: PondMessage, assigns?: PondAssigns) {
-        this._engine.broadcast([this._event.sender], event, payload);
+        this._engine.sendMessage('channel', [this._event.sender], event, payload);
         return this.accept(assigns);
     }
 
@@ -65,7 +61,7 @@ export class ChannelResponse extends PondResponse {
      * @param payload - the payload to send
      */
     public broadcast(event: string, payload: PondMessage): ChannelResponse {
-        this._engine.broadcast('all_users', event, payload);
+        this._engine.sendMessage(this._event.sender, 'all_users', event, payload);
         return this;
     }
 
@@ -75,7 +71,7 @@ export class ChannelResponse extends PondResponse {
      * @param payload - the payload to send
      */
     public broadcastFromUser(event: string, payload: PondMessage): ChannelResponse {
-        this._engine.broadcast('all_except_sender', event, payload, this._event.sender, true);
+        this._engine.sendMessage(this._event.sender, 'all_except_sender', event, payload);
         return this;
     }
 
@@ -86,7 +82,7 @@ export class ChannelResponse extends PondResponse {
      * @param userIds - the ids of the clients to send the message to
      */
     public sendToUsers(event: string, payload: PondMessage, userIds: string[]): ChannelResponse {
-        this._engine.broadcast(userIds, event, payload, this._event.sender, true);
+        this._engine.sendMessage(this._event.sender, userIds, event, payload);
         return this;
     }
 
@@ -119,7 +115,7 @@ export class ChannelResponse extends PondResponse {
         try {
             this._engine.untrackPresence(userId);
         } catch (e: any) {
-            this._engine.broadcast([userId], 'error_channel', {message: e.message, code: 500});
+            this._engine.sendMessage('channel', [userId], 'error_channel', {message: e.message, code: 500});
         }
 
         return this;
@@ -132,7 +128,6 @@ export class ChannelResponse extends PondResponse {
      */
     public evictUser(reason: string, userId?: string): void {
         this._engine.kickUser(userId || this._event.sender, reason);
-        this._resolve(false);
         this._hasExecuted = true;
     }
 
@@ -142,7 +137,6 @@ export class ChannelResponse extends PondResponse {
      */
     public closeChannel(reason: string): void {
         this._engine.destroy(reason);
-        this._resolve(false);
         this._hasExecuted = true;
     }
 

@@ -1,9 +1,10 @@
-import {PondPresence, PresenceEngine, UserPresences} from "../presence/presenceEngine";
-import {Subject} from "../utils/subjectUtils";
-import {ChannelResponse} from "./channelResponse";
-import {ChannelRequest} from "./channelRequest";
 import {PondMessage} from "../abstracts/abstractResponse";
 import {MiddlewareFunction} from "../abstracts/middleware";
+import {ChannelRequest} from "./channelRequest";
+import {PondPresence, PresenceEngine, UserPresences} from "../presence/presenceEngine";
+import {ChannelResponse} from "./channelResponse";
+import {ClientMessage} from "../endpoint/endpointEngine";
+import {Subject} from "../utils/subjectUtils";
 
 export type PondAssigns = Record<string, any>;
 export type ChannelReceivers = 'all_users' | 'all_except_sender' | string[];
@@ -11,9 +12,9 @@ type ChannelSenders = 'channel' | string;
 
 export type InternalChannelEvent = {
     sender: ChannelSenders;
-    recipient: ChannelReceivers;
     payload: PondMessage;
     event: string;
+    recipients: string[];
 }
 
 export interface ChannelEvent {
@@ -50,6 +51,7 @@ export class ChannelEngine {
         this._users = new Map<string, PondAssigns>();
         this._parentEngine = parent;
     }
+
 
     /**
      * @desc Adds a user to the channel
@@ -90,22 +92,22 @@ export class ChannelEngine {
      * @param reason - The reason for kicking the user
      */
     public kickUser(userId: string, reason: string) {
-        this._send('channel', [userId], 'kicked_out', {
+        this.sendMessage('channel', [userId], 'kicked_out', {
             message: 'You have been kicked out of the channel',
             reason: reason
         });
         this.removeUser(userId);
-        this._send('channel', 'all_users', 'kicked', {
+        this.sendMessage('channel', 'all_users', 'kicked', {
             userId: userId, reason: reason
         });
     }
 
     /**
      * @desc Self destructs the channel
-     * @param reason - The reason for self destructing the channel
+     * @param reason - The reason for self-destructing the channel
      */
     public destroy(reason: string) {
-        this._send('channel', 'all_users', 'destroyed', {
+        this.sendMessage('channel', 'all_users', 'destroyed', {
             message: 'Channel has been destroyed',
             reason: reason
         });
@@ -127,7 +129,7 @@ export class ChannelEngine {
             throw new Error(`ChannelEngine: User with id ${userId} already has a presence subscription in channel ${this.name}`);
 
         this._presenceEngine.trackPresence(userId, presence, change => {
-            this._send('channel', [userId], 'presence_change', change);
+            this.sendMessage('channel', [userId], 'presence_change', change);
         });
     }
 
@@ -198,44 +200,6 @@ export class ChannelEngine {
     }
 
     /**
-     * @desc Broadcasts a message to a specified set of users, from a specified sender
-     * @param recipient - The users to send the message to
-     * @param event - The event name
-     * @param payload - The payload of the message
-     * @param sender - The sender of the message
-     * @param ignoreMiddleware - Whether or not to ignore middleware
-     */
-    public broadcast(recipient: ChannelReceivers, event: string, payload: PondMessage, sender: ChannelSenders = 'channel', ignoreMiddleware: boolean = false) {
-        if (sender === 'channel' || ignoreMiddleware)
-            this._send(sender, recipient, event, payload);
-
-        else if (!this._users.has(sender))
-            throw new Error(`ChannelEngine: User with id ${sender} does not exist in channel ${this.name}`);
-
-        else {
-            const responseEvent: InternalChannelEvent = {
-                event: event,
-                payload: payload,
-                sender: sender,
-                recipient: recipient
-            }
-
-            const request = new ChannelRequest(responseEvent, this);
-            const response = new ChannelResponse(responseEvent, this, data => {
-                if (data)
-                    this._send(sender, recipient, event, payload);
-            });
-
-            this._parentEngine.execute(request, response, () => {
-                this._send('channel', [sender], 'error_no_handler', {
-                    message: 'A handler did not respond to the event',
-                    code: 404
-                });
-            });
-        }
-    }
-
-    /**
      * @desc Stops tracking a user's presence
      * @param userId - The id of the user to untrack
      * @param isPond - Whether the user is a pond
@@ -249,23 +213,6 @@ export class ChannelEngine {
     }
 
     /**
-     * @desc Subscribes to a user's messages
-     * @param userId - The id of the user to subscribe to
-     * @param onMessage - The callback to call when a message is received
-     * @private
-     */
-    private _subscribe(userId: string, onMessage: (event: ChannelEvent) => void) {
-        this._receiver.subscribe(userId, event => {
-            if (event.recipient.includes(userId))
-                onMessage({
-                    event: event.event,
-                    payload: event.payload,
-                    channelName: this.name
-                });
-        });
-    }
-
-    /**
      * @desc Sends a message to a specified set of users, from a specified sender
      * @param sender - The sender of the message
      * @param recipient - The users to send the message to
@@ -273,7 +220,10 @@ export class ChannelEngine {
      * @param payload - The payload of the message
      * @private
      */
-    private _send(sender: ChannelSenders, recipient: ChannelReceivers, event: string, payload: PondMessage) {
+    public sendMessage(sender: ChannelSenders, recipient: ChannelReceivers, event: string, payload: PondMessage) {
+        if (!this._users.has(sender) && sender !== 'channel')
+            throw new Error(`ChannelEngine: User with id ${sender} does not exist in channel ${this.name}`);
+
         const allUsers = Array.from(this._users.keys());
         let users: string[];
 
@@ -297,9 +247,53 @@ export class ChannelEngine {
 
         this._receiver.next({
             sender: sender,
-            recipient: users,
+            recipients: users,
             payload: payload,
             event: event
+        });
+    }
+
+    /**
+     * @desc Handles a message from a user
+     * @param userId - The id of the user who sent the message
+     * @param message - The message received
+     */
+    public onMessage(userId: string, message: ClientMessage) {
+        if (!this._users.has(userId))
+            throw new Error(`ChannelEngine: User with id ${userId} does not exist in channel ${this.name}`);
+
+        const responseEvent: InternalChannelEvent = {
+            event: message.event,
+            payload: message.payload,
+            sender: userId,
+            recipients: [],
+        }
+
+        const request = new ChannelRequest(responseEvent, this);
+        const response = new ChannelResponse(responseEvent, this);
+
+        this._parentEngine.execute(request, response, () => {
+            this.sendMessage('channel', [userId], 'error_no_handler', {
+                message: 'A handler did not respond to the event',
+                code: 404
+            });
+        });
+    }
+
+    /**
+     * @desc Subscribes to a user's messages
+     * @param userId - The id of the user to subscribe to
+     * @param onMessage - The callback to call when a message is received
+     * @private
+     */
+    private _subscribe(userId: string, onMessage: (event: ChannelEvent) => void) {
+        this._receiver.subscribe(userId, event => {
+            if (event.recipients.includes(userId))
+                onMessage({
+                    event: event.event,
+                    payload: event.payload,
+                    channelName: this.name
+                });
         });
     }
 }

@@ -1,29 +1,34 @@
-import {ChannelEngine, UserAssigns} from "../channel/channelEngine";
 import {UserPresences} from "../presence/presenceEngine";
 import {MatchPattern, PondPath, Resolver} from "../utils/matchPattern";
+import {ChannelEngine, UserAssigns} from "../channel/channelEngine";
+import {PondMessage} from "./abstractResponse";
 
 export interface EventObject {
     event: string;
     params: Record<string, string>;
     query: Record<string, string>;
+    payload: PondMessage;
 }
 
 export class AbstractRequest {
     protected readonly _engine: ChannelEngine;
     private _eventObject: Resolver | null;
     private readonly _event: string;
+    private readonly _payload: PondMessage;
 
-    constructor(event: string, engine: ChannelEngine) {
+    constructor(event: string, engine: ChannelEngine, payload: PondMessage) {
         this._engine = engine;
         this._event = event;
         this._eventObject = null;
+        this._payload = payload;
     }
 
     public get event(): EventObject {
         return {
             event: this._event,
             params: this._eventObject?.params || {},
-            query: this._eventObject?.query || {}
+            query: this._eventObject?.query || {},
+            payload: this._payload
         };
     }
 

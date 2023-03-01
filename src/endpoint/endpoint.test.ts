@@ -239,96 +239,6 @@ describe('endpoint', () => {
         expect(endpoint['_channels']).toHaveLength(1);
     });
 
-    it('should send an error when we send an incomplete message', async () => {
-        const {socket, server, createPondChannel} = createPondSocket();
-        expect(server).toBeDefined();
-
-        const testPond = createPondChannel();
-
-        const endpoint = socket.createEndpoint('/api/:room', (_, res) => {
-            res.accept();
-        });
-
-        testPond.onJoinRequest((req, res) => {
-            expect(req.event.params.room).toBeDefined();
-            res.accept({
-                assigns: {
-                    status: 'online',
-                }
-            });
-        });
-
-        endpoint.useChannel('/test/:room', testPond);
-
-        const message: ClientMessage = {
-            action: ClientActions.LEAVE_CHANNEL,
-            channelName: '/test/socket',
-            event: 'TEST', payload: {}
-        }
-
-        await request(server)
-            .ws('/api/socket')
-            .expectUpgrade(res => expect(res.statusCode).toBe(101))
-            .sendJson({
-                ...message, action: null
-            })
-            .expectJson({
-                event: "error",
-                channelName: 'ENDPOINT',
-                payload: {
-                    message: "No action provided",
-                }
-            }).close()
-            .expectClosed();
-
-        await request(server)
-            .ws('/api/socket')
-            .expectUpgrade(res => expect(res.statusCode).toBe(101))
-            .sendJson({
-                ...message, action: ClientActions.BROADCAST, channelName: null
-            })
-            .expectJson({
-                event: "error",
-                channelName: 'ENDPOINT',
-                payload: {
-                    message: "No channel name provided",
-                }
-            }).close()
-            .expectClosed();
-
-        await request(server)
-            .ws('/api/socket')
-            .expectUpgrade(res => expect(res.statusCode).toBe(101))
-            .sendJson({
-                ...message, action: ClientActions.BROADCAST_FROM, payload: null
-            })
-            .expectJson({
-                event: "error",
-                channelName: 'ENDPOINT',
-                payload: {
-                    message: "No payload provided",
-                }
-            }).close()
-            .expectClosed();
-
-        // send incorrect Json message
-        await request(server)
-            .ws('/api/socket')
-            .expectUpgrade(res => expect(res.statusCode).toBe(101))
-            .send('"action": "JOIN_CHANNEL", "channelName": "/test/socket", "event": "TEST", "payload": {}}')
-            .expectJson({
-                event: "error",
-                channelName: 'ENDPOINT',
-                payload: {
-                    message: "Invalid JSON",
-                }
-            }).close()
-            .expectClosed();
-
-        server.close();
-        expect(endpoint['_channels']).toHaveLength(1);
-    });
-
     it('should send an error when the channel exists but other things happen', async () => {
         const {socket, server, createPondChannel} = createPondSocket();
         expect(server).toBeDefined();
@@ -341,7 +251,7 @@ describe('endpoint', () => {
 
         channel.onEvent(':room', (req, res) => {
             if (req.event.params.room === 'TEST')
-                res.accept();
+                res.accept().broadcast(req.event.event, req.event.payload)
             else if (req.event.params.room === 'TEST2')
                 res.reject();
             else

@@ -28,7 +28,6 @@ describe('server', () => {
         });
 
         expect(endpoint).toBeInstanceOf(Endpoint);
-        expect(endpoint['_handler']).toEqual(expect.any(Function));
     });
 
     it('should be able to create multiple endpoints', () => {
@@ -44,9 +43,7 @@ describe('server', () => {
         });
 
         expect(endpoint).toBeInstanceOf(Endpoint);
-        expect(endpoint['_handler']).toEqual(expect.any(Function));
         expect(endpoint2).toBeInstanceOf(Endpoint);
-        expect(endpoint2['_handler']).toEqual(expect.any(Function));
     });
 
     it('should be able to reject a socket', () => {

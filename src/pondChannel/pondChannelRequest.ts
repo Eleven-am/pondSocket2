@@ -5,30 +5,31 @@ import {ChannelEngine, UserData} from "../channel/channelEngine";
 export type JoinParams = Record<string, any>;
 
 export class PondChannelRequest extends AbstractRequest {
-    private readonly _payload: RequestCache;
+    private readonly _requestCache: RequestCache;
 
     constructor(event: RequestCache, engine: ChannelEngine) {
-        super(event.channelName, engine);
-        this._payload = event;
+        super(event.channelName, engine, event.joinParams);
+        this._requestCache = event;
     }
 
     public get joinParams(): JoinParams {
-        return this._payload.joinParams;
+        return this._requestCache.joinParams;
     }
 
     public get user(): UserData {
         return {
-            id: this._payload.clientId,
-            assigns: this._payload.assigns,
+            id: this._requestCache.clientId,
+            assigns: this._requestCache.assigns,
             presence: {}
         }
     }
 
     public get event(): EventObject {
         return {
-            event: this._payload.channelName,
-            params: this._payload.params,
-            query: this._payload.query
+            event: this._requestCache.channelName,
+            params: this._requestCache.params,
+            query: this._requestCache.query,
+            payload: this._requestCache.joinParams
         };
     }
 }

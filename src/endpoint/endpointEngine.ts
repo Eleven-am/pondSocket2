@@ -23,10 +23,7 @@ export interface IncomingConnection {
 export enum ClientActions {
     JOIN_CHANNEL = 'JOIN_CHANNEL',
     LEAVE_CHANNEL = 'LEAVE_CHANNEL',
-    UPDATE_PRESENCE = 'UPDATE_PRESENCE',
-    BROADCAST_FROM = 'BROADCAST_FROM',
     BROADCAST = 'BROADCAST',
-    SEND_MESSAGE_TO_USER = 'SEND_MESSAGE_TO_USER'
 }
 
 export type ClientMessage = {
@@ -232,27 +229,9 @@ export class EndpointEngine {
                 });
                 break;
 
-            case "BROADCAST_FROM":
-                this._execute(message.channelName, (channel) => {
-                    channel.broadcast('all_except_sender', message.event, message.payload, cache.clientId);
-                });
-                break;
-
             case "BROADCAST":
                 this._execute(message.channelName, (channel) => {
-                    channel.broadcast('all_users', message.event, message.payload, cache.clientId);
-                });
-                break;
-
-            case "SEND_MESSAGE_TO_USER":
-                this._execute(message.channelName, (channel) => {
-                    channel.broadcast(message.addresses || [], message.event, message.payload, cache.clientId);
-                });
-                break;
-
-            case "UPDATE_PRESENCE":
-                this._execute(message.channelName, (channel) => {
-                    channel.updatePresence(cache.clientId, message.payload);
+                    channel.onMessage(cache.clientId, message);
                 });
                 break;
         }
@@ -284,9 +263,10 @@ export class EndpointEngine {
                 message: "No payload provided"
             };
 
-            else this._handleMessage(cache, data);
+            if (!this._isObjectEmpty(errorMessage.payload))
+                this._sendMessage(cache.socket, errorMessage);
 
-            if (!this._isObjectEmpty(errorMessage.payload)) this._sendMessage(cache.socket, errorMessage);
+            else this._handleMessage(cache, data);
 
         } catch (e) {
             if (e instanceof SyntaxError) {

@@ -1,27 +1,6 @@
 import {ChannelRequest} from "./channelRequest";
-import {ChannelEngine, InternalChannelEvent} from "./channelEngine";
+import {createChannelEngine, createChannelEvent} from "./channelResponse.test";
 
-const createChannelEngine = () => {
-    const parentEngine = {
-        destroyChannel: jest.fn(),
-        execute: jest.fn(),
-    } as any;
-
-    return new ChannelEngine('test', parentEngine);
-}
-
-const createChannelEvent = () => {
-    const responseEvent: InternalChannelEvent = {
-        event: 'event',
-        payload: {
-            payload: 'payload',
-        },
-        sender: 'sender',
-        recipient: ['recipient'],
-    }
-
-    return responseEvent;
-}
 
 describe('ChannelRequest', () => {
     it('should create a new ChannelRequest', () => {
@@ -35,7 +14,7 @@ describe('ChannelRequest', () => {
         const channelEngine = createChannelEngine();
         const event = createChannelEvent();
         const channelRequest = new ChannelRequest(event, channelEngine);
-        expect(channelRequest.payload).toEqual(event.payload);
+        expect(channelRequest.internalEvent).toEqual(event.payload);
     });
 
     it('should return the user', () => {

@@ -58,7 +58,7 @@ export class PondChannelResponse extends PondResponse {
      */
     public send(event: string, payload: PondMessage, assigns?: PondAssigns) {
         this.accept(assigns);
-        this._engine.broadcast([this._user.clientId], event, payload);
+        this._engine.sendMessage('channel', [this._user.clientId], event, payload);
         return this;
     }
 
@@ -68,7 +68,7 @@ export class PondChannelResponse extends PondResponse {
      * @param payload - the payload to send
      */
     public broadcast(event: string, payload: PondMessage): PondChannelResponse {
-        this._engine.broadcast('all_users', event, payload);
+        this._engine.sendMessage(this._user.clientId, 'all_users', event, payload);
         return this;
     }
 
@@ -78,7 +78,7 @@ export class PondChannelResponse extends PondResponse {
      * @param payload - the payload to send
      */
     public broadcastFromUser(event: string, payload: PondMessage): PondChannelResponse {
-        this._engine.broadcast('all_except_sender', event, payload, this._user.clientId, true);
+        this._engine.sendMessage(this._user.clientId, 'all_except_sender', event, payload);
         return this;
     }
 
@@ -89,7 +89,7 @@ export class PondChannelResponse extends PondResponse {
      * @param userIds - the ids of the clients to send the message to
      */
     public sendToUsers(event: string, payload: PondMessage, userIds: string[]): PondChannelResponse {
-        this._engine.broadcast(userIds, event, payload, this._user.clientId, true);
+        this._engine.sendMessage(this._user.clientId, userIds, event, payload);
         return this;
     }
 
